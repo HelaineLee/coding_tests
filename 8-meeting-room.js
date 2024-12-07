@@ -1,12 +1,10 @@
 // 2 <= n <= 100
 
 const getMeetingNumber = (enter, exit) => {
-  const answer = [];
+  const answer = Array.from({length: enter.length}, () => 0);
 
   for(let i=1 ; i<=enter.length ; i++){  // 1 2 3 4
-    let sum = 0;
-    for(let j=1 ; j<=enter.length ; j++){ // 2 4 1 3
-      if(i !== j){
+    for(let j=i+1 ; j<=enter.length ; j++){ // 2 4 1 3
         const enterIndexOfI = enter.indexOf(i);
         const enterIndexOfJ = enter.indexOf(j);
         const exitIndexOfI = exit.indexOf(i);
@@ -14,7 +12,8 @@ const getMeetingNumber = (enter, exit) => {
 
         // 입실/퇴실 순서 역전
         if( (enterIndexOfI-enterIndexOfJ) * (exitIndexOfI-exitIndexOfJ) < 0 ){
-          sum++;
+          answer[i-1]++;
+          answer[j-1]++;
         }else{
           const enterNext = enter.slice(enterIndexOfI > enterIndexOfJ ? enterIndexOfI+1 : enterIndexOfJ+1);
           const exitPrev = exit.slice(0, exitIndexOfI < exitIndexOfJ ? exitIndexOfI : exitIndexOfJ);
@@ -22,15 +21,14 @@ const getMeetingNumber = (enter, exit) => {
             // console.log(i, j, enterNext, exitPrev);
             for(let x=0 ; x<enterNext.length ; x++){
               if(exitPrev.includes(enterNext[x])){
-                sum++;
+                answer[i-1]++;
+                answer[j-1]++;
                 break;
               }
             }
           }
         }
-      }
     }
-    answer.push(sum);
   }
   return answer;
 }
