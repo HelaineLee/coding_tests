@@ -20,15 +20,12 @@ const getMeetingNumber = (enter, exit) => {
           const exitPrev = exit.slice(0, exitIndexOfI < exitIndexOfJ ? exitIndexOfI : exitIndexOfJ);
           if(enterNext.length > 0 && exitPrev.length > 0){
             // console.log(i, j, enterNext, exitPrev);
-            let contain = 0;
             for(let x=0 ; x<enterNext.length ; x++){
-              for(let y=0 ; y<exitPrev.length ; y++){
-                if(enterNext[x] === exitPrev[y]){
-                  contain = 1;
-                }
+              if(exitPrev.includes(enterNext[x])){
+                sum++;
+                break;
               }
             }
-            sum += contain;
           }
         }
       }
