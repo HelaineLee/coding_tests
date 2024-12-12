@@ -9,18 +9,16 @@ const getFrequency = (str) => {
     e:0
   }
 
-  const arr = [];
+  let max = 0;
 
   for(let i=0 ; i<str.length ; i++){
     obj[str[i]]++;
+    if(max < obj[str[i]]){
+      max = obj[str[i]];
+    }
   }
 
-  let max = 0;
-  Object.values(obj).map(o => {
-    if(o > max){
-      max = o;
-    }
-  });
+  const arr = [];
 
   Object.values(obj).map(o => {
     arr.push(max-o);
