@@ -19,9 +19,9 @@ const getUseTime = (arrival, state) => {
   let time = arrival[0];
   let status = state[0]; // 1 = out, 0 = in
   let ignoreStatus = false;
-  const maxTime = arrival[arrival.length-1]+arrival.length;
+  let check = 0;
 
-  while(time < maxTime){
+  while(check < arrival.length){
     let timeIncrease = 0;
 
     const timeFilter = history.filter(h => h.time === time);
@@ -37,6 +37,7 @@ const getUseTime = (arrival, state) => {
           useTime[h.emp] = time;
           timeIncrease++;
           ignoreStatus = false;
+          check++;
         }else{
           h.time = time+1;
         }
