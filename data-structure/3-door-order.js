@@ -18,34 +18,39 @@ const getUseTime = (arrival, state) => {
   
   let time = arrival[0];
   let status = state[0]; // 1 = out, 0 = in
+  let ignoreStatus = false;
   const maxTime = arrival[arrival.length-1]+arrival.length;
 
   while(time < maxTime){
-    let statusChange = false;
     let timeIncrease = 0;
 
-    history.filter(h => h.time === time).map(h => {
-      console.log(h, status, time)
-      if(h.state === status && timeIncrease === 0){
-        useTime[h.emp] = time;
-        timeIncrease++;
-      }else{
-        h.time = time+1;
-        if(h.state !== status){
-          statusChange = true;
-        }
+    const timeFilter = history.filter(h => h.time === time);
+    if(timeFilter.length > 0){
+      const statusFilter = timeFilter.filter(h => h.state === status);
+      if(statusFilter.length === 0){
+        status = status === 1 ? 0 : 1;
       }
-    });
 
-    if(statusChange){
-      status = status === 1 ? 0 : 1;
+      timeFilter.map(h => {
+        // console.log(h, status, ignoreStatus);
+        if(timeIncrease === 0 && (h.state === status || ignoreStatus)){
+          useTime[h.emp] = time;
+          timeIncrease++;
+          ignoreStatus = false;
+        }else{
+          h.time = time+1;
+        }
+      });
+    }else{
+      ignoreStatus = true;
     }
+
     time++;
   }
 
   return useTime;
 }
 
-// console.log(getUseTime([0, 1, 1, 1, 2, 3, 8, 8], [1, 0, 0, 1, 0, 0, 1, 0])); // [0, 2, 3, 1, 4, 5, 8, 9]
+console.log(getUseTime([0, 1, 1, 1, 2, 3, 8, 8], [1, 0, 0, 1, 0, 0, 1, 0])); // [0, 2, 3, 1, 4, 5, 8, 9]
 console.log(getUseTime([3, 3, 4, 5, 5, 5], [1, 0, 1, 0, 1, 0])); // [3, 6, 4, 7, 5, 8]
-// console.log(getUseTime([2, 2, 2, 3, 4, 8, 8, 9, 10, 10], [1, 0, 0, 0, 1, 1, 0, 1, 1, 0])); // [2, 3, 4, 5, 6, 8, 11, 9, 10, 12]
+console.log(getUseTime([2, 2, 2, 3, 4, 8, 8, 9, 10, 10], [1, 0, 0, 0, 1, 1, 0, 1, 1, 0])); // [2, 3, 4, 5, 6, 8, 11, 9, 10, 12]
