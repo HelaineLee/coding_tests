@@ -20,30 +20,34 @@ const getOriginal = (str) => {
 
   while(i<str.length){
     const code = str[i].charCodeAt();
-    if(code === 40){  // (
-      depth++;
-      if(depth > 1){
-        iteration += str[i];
-      }
-    }else if(code === 41){  // )
-      depth--;
-      if(depth === 0){
-        origin += getIteration(num, getOriginal(iteration));
-        num = "";
-        iteration = "";
-      }else{
-        iteration += str[i];
-      }
-    }else{
-      if(depth === 0){
-        if(code >= 48 && code <= 57){ // 0 ~ 9
-          num += str[i];
-        }else{  // a ~ z
-          origin += str[i];
+    switch(code){
+      case 40:
+        depth++;
+        if(depth > 1){
+          iteration += str[i];
         }
-      }else{
-        iteration += str[i];        
-      }
+        break;
+      case 41:
+        depth--;
+        if(depth === 0){
+          origin += getIteration(num, getOriginal(iteration));
+          num = "";
+          iteration = "";
+        }else{
+          iteration += str[i];
+        }
+        break;
+      default:
+        if(depth === 0){
+          if(code >= 48 && code <= 57){ // 0 ~ 9
+            num += str[i];
+          }else{  // a ~ z
+            origin += str[i];
+          }
+        }else{
+          iteration += str[i];
+        }
+        break;
     }
 
     i++;
