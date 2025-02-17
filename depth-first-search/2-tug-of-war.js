@@ -1,23 +1,33 @@
-const generateArray = (arr, enemy) => { // [1,2,3,4]
-  // console.log(arr);
+const generateArray = (arr, enemy, prev) => { // [1,2,3,4]
+  // console.log(arr, prev);
+
   if (arr.length === 0) return [];
-  if (arr.length === 1) return [arr.join('')];
+  if (arr.length === 1){
+    let skip = false;
+    enemy.map(e => {
+      if(e.includes(parseInt(arr[0])) && e.includes(parseInt(prev))) {
+        skip = true;
+      }
+    });
+    return skip ? [] : [arr.join('')];
+  }
 
   const result = [];
 
   for (let i=0 ; i<arr.length ; i++) {
-    const rest = [...arr.slice(0, i), ...arr.slice(i + 1)]; // Remove the current element
-    const perms = generateArray(rest, enemy); // Recursively get permutations of the rest
-    // console.log(rest, perms);
+    let skip = false;
+    enemy.map(e => {
+      if(e.includes(parseInt(arr[i])) && e.includes(parseInt(prev))) {
+        skip = true;
+      }
+    });
+  
+    if(!skip){
+      const rest = [...arr.slice(0, i), ...arr.slice(i + 1)]; // Remove the current element
+      const perms = generateArray(rest, enemy, arr[i]); // Recursively get permutations of the rest
+      // console.log(rest, perms);
 
-    for (let perm of perms) {
-      let skip = false;
-      enemy.map(e => {
-        if(e.includes(parseInt(arr[i])) && e.includes(parseInt(perm[0]))) {
-          skip = true;
-        }
-      });
-      if(!skip){
+      for (let perm of perms) {
         result.push(arr[i] + perm); // Concatenate current element with each permutation
       }
     }
@@ -30,7 +40,7 @@ const getMinimumCases = (enemy, n) => {
   let idx = 1;
   const element = Array.from({length: n}, () => `${idx++}`);
 
-  const answer = generateArray(element, enemy);
+  const answer = generateArray(element, enemy, '0');
   // console.log(answer);
 
   return answer.length;
