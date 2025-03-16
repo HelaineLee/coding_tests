@@ -13,16 +13,12 @@ const getMinimumJump = (arr) => {
 	let answer = -1;
 	for(let i=1 ; i<=arr[0] ; i++){
 		const nextArr = arr.slice(i);
-		let currentAnswer = 1;
 
 		if(nextArr.length > 0){
 			const jump = getMinimumJump(nextArr);
 			// console.log(arr, nextArr, jump);
 			if(jump > -1){
-				currentAnswer += jump;
-				if(currentAnswer > 0){
-					answer = answer === -1 ? currentAnswer : Math.min(answer, currentAnswer);
-				}
+				answer = answer === -1 ? jump+1 : Math.min(answer, jump+1);
 			}
 		}
 
